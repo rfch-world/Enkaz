@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Confirm order</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>#confirm-order-form{width:300px;margin:auto;}
+.error-message{color:red;}</style>
+
+</head>
+<body>
+<div th:replace="menu :: menu"></div>
+<div class="container">
+<form th:action="@{/confirm-order-process}" method="POST" th:object="${customer}" id="confirm-order-form">
+
+
+<div class="form-group">
+<label for="customer-name">Name: </label>
+<input class="form-control" id="customer-name" th:field="*{name}" />
+<span class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+</div>
+
+<div class="form-group">
+<label for="customer-address">Address: </label>
+<input class="form-control" id="customer-address" th:field="*{address}" />
+<span class="error-message" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+</div>
+
+<div class="form-group">
+<label for="customer-phone">Phone: </label>
+<input class="form-control" id="customer-phone" th:field="*{phone}"/>
+<span class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+</div>
+
+
+<div class="form-group">
+<label for="customer-email">Email: </label>
+<input class="form-control" id="customer-email" th:field="*{email}"/>
+<span class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+</div>
+
+
+<div class="form-group">
+<label for="order-note">Note: </label>
+<input class="form-control" id="order-note" th:field="*{note}"/>
+<span class="error-message" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></span>
+</div>
+
+
+<button class="btn btn-success" type="submit">Save</button>
+</form>
+</div>
+<script>
+var customerName=document.getElementById('customer-name');
+var customerAddress=document.getElementById('customer-address');
+var customerPhone=document.getElementById('customer-phone');
+var orderNote=document.getElementById('order-note');
+var customerEmail=document.getElementById('customer-email');
+
+var order={};
+var basketBooksFromStorage=localStorage.getItem('basketBooks');
+if(basketBooksFromStorage==null){localStorage.setItem('basketBooks','[]');}else{
+	basketBooks=JSON.parse(basketBooksFromStorage);
+}
+order.basketBooks=basketBooks;
+order.customer={};
+function confirmOrder(){
+	order.customer.name=customerName.value;
+	order.customer.address=customerAddress.value;
+	order.customer.phone=customerPhone.value;
+	order.customer.email=customerEmail.value;
+	order.note=orderNote.value;
+	console.log(order);
+	
+	var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      var response = this.responseText;
+	      console.log(JSON.parse(response));
+	      localStorage.setItem('basketBooks','[]');
+	      window.location.href='order-confirmation-message';
+	    }
+	  };
+	  xhttp.open("POST", "/rest/orders", true);
+	  xhttp.setRequestHeader("Content-type", "application/json");
+	  
+	  var totalPrice=0;
+	  for(var i=0;i<order.basketBooks.length;i++){
+		  totalPrice+=order.basketBooks[i].book.price*order.basketBooks[i].count;
+	  }
+	  order.totalPrice=totalPrice;
+	  
+	  xhttp.send(JSON.stringify(order));
+	  
+}
+</script>
+</body>
+</html>

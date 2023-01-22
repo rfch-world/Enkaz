@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+<title>Books</title>
+<style>
+table,th,td{
+border:3px solid green;}
+#books-table{border-collapse: collapse;width: 100%;}
+th{padding: 5px;background-color:rgb(120, 120, 120);}
+td{padding: 5px;background-color: black; color: white}
+td:hover{color:blue;cursor: pointer;}
+
+#username{display: inline-block;font-size:20px;font-weight: bold;margin: 0;}
+.book-image{width: 40px;}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<link rel="stylesheet" type="text/css"
+href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8"
+src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+<script>
+$(document).ready(function() {
+$('#books-table').DataTable();
+});
+</script>
+</head>
+<body>
+<div th:replace="menu :: menu"></div>
+<div class="container-fluid">
+<a class="btn btn-success" th:href="@{/books/new}">New Book</a>
+<a class="btn btn-primary" th:href="@{/home}">Main page</a> 
+<span id="username" th:text="${username}"></span>
+<div style="height: 5 px;"></div>
+	<table id="books-table" class="table table-hover table-bordered">
+	    <thead>
+	       <tr>
+	      	<th>ID</th>
+	       	<th>Name</th>
+	       		<th>Description</th>
+	       		<th>Price</th>
+	       		<th>Author</th>
+	       		<th>Count of page</th>
+	   			<th>Picture</th>
+	   			<th>Operations</th>
+	    </tr>
+	   </thead>
+	<tbody>
+	<tr th:each="book : ${books}">
+	<td th:text="${book.id}"></td>
+	<td th:text="${book.name}"></td>
+	<td th:text="${book.description}"></td>
+		<td th:text="${book.price}"></td>
+		<td th:text="${book.author}"></td>
+		<td th:text="${book.pageCount}"></td>
+		
+		
+		<td> <img class="book-image"
+		th:src="@{'/files/'+${book.image}}"/>  </td>
+		
+		
+		
+		
+		<td> <a th:href="@{/books/delete/{id}(id=${book.id})}" class="btn btn-danger"
+		th:onclick="if(!(confirm('Are you sure?'))) return false" >Delete</a> 
+		<a th:href="@{/books/edit/{id}(id=${book.id})}"  class="btn btn-primary">Edit</a> </td>
+	
+	</tr>
+	</tbody>
+
+	</table>
+	</div>
+
+
+	</body>
+	</html>

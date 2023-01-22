@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Entrance</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="menu :: menu"></div>
+<div class="container">
+<h1>Welcome to book shopping website</h1>
+<a class="btn btn-primary" th:href="@{/books}">Schedule of books</a>
+<a class="btn btn-warning" th:href="@{/customer}">Start to buy books</a>
+<a class="btn btn-success" th:href="@{/orders}">My orders</a>
+<a class="btn btn-danger" th:href="@{/logout}">Log out</a>
+</div>
+
+</body>
+</html>

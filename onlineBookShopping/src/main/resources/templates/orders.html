@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Orders</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="menu :: menu"></div>
+<h1>Orders</h1>
+
+
+
+<table id="orders-table" class="table table-hover table-bordered">
+<thead><tr>
+
+<th>ID</th>
+<th>Date</th>
+<th>Customer</th>
+<th>Ordered ones</th>
+<th>Total price</th>
+<th>Note</th>
+
+</tr></thead>
+<tbody>
+<tr th:each="order : ${orders}">
+<td th:text="${order.id}"></td>
+<td th:text="${order.register}"></td>
+
+
+<td>
+<ul>
+<li th:text="${'Ad: '+order.customer.name}"></li>
+<li th:text="${'Telefon: '+order.customer.phone}"></li>
+<li th:text="${'Ünvan: '+order.customer.address}"></li>
+<li th:text="${'Email: '+order.customer.email}"></li>
+</ul>
+</td>
+<td>
+
+<ol>
+<li th:each="basketBook : ${order.basketBooks}">
+
+<span th:text="${basketBook.book.name+' ('+basketBook.count+' ədəd) ('+
+basketBook.book.price+' AZN) (Cəm : '+(basketBook.book.price*basketBook.count)+' AZN)'}"></span>
+
+</li>
+</ol>
+
+</td>
+<td th:text="${order.totalPrice}"></td>
+<td th:text="${order.note}"></td>
+
+
+</tr>
+</tbody>
+</table>
+
+
+
+</body>
+</html>

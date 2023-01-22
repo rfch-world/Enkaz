@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Order registration</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="menu :: menu"></div>
+<div class="container">
+<h1>Your order has been accepted</h1>
+
+<a class="btn btn-success" th:href="@{/customer}">Continue your orders</a>
+</div>
+
+<script>
+
+localStorage.setItem('basketBooks','[]');
+
+</script>
+</body>
+</html>

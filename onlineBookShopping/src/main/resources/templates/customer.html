@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Customer</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link th:href="@{/styles/customer.css}" rel="stylesheet" />
+<style>.basket-book-image{width:30px;}
+#total-price{
+font-size: 24px;
+}
+</style>
+</head>
+<body>
+<!-- HTML BEGIN -->
+<div th:replace="menu :: menu"></div>
+<div id="main-content">
+
+</div>
+<button type="button" data-toggle="modal" data-target="#basketModal" onclick="openBasket()"
+id='open-basket-btn' class='btn btn-primary'>Basket
+<span class='badge badge-light' id="basket-book-count">0</span></button>
+<input id='search-input' class='form-control' placeholder='Axtarış' onchange='searchBook(this.value)'/>
+
+<div class="modal fade" id="basketModal">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h1 class="modal-title">Basket</h1>
+<button type="button" class="close" data-dismiss="modal">x</button>
+</div>
+<div class="modal-body">
+
+<table class="table table-hover table-bordered">
+<thead>
+<tr>
+<th>ID</th>
+<th>Picture</th>
+<th>Name</th>
+<th>Price</th>
+<th>Count</th>
+<th>Total Price</th>
+<th></th></tr></thead>
+<tbody id="basket-books-table"></tbody>
+</table>
+<span id="total-price"></span>
+
+</div>
+<div class="modal-footer">
+<button  class="btn btn-success" onclick="confirmOrder()" id="confirm-order-btn">Confirm order</button>
+<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+</div>
+</div></div></div>
+<!-- HTML END -->
+<script>
+// JAVASCRIPT BEGIN
+// REFRESH BEGIN
+var xht = new XMLHttpRequest();
+var booksArrayGlobal=[];
+var basketBooks=[];
+
+var searchTextGlobal='';
+var begin=0;
+var length=20;
+var mainContentHTML="";
+var basketBooksFromStorage=localStorage.getItem('basketBooks');
+if(basketBooksFromStorage==null){localStorage.setItem('basketBooks','[]');}else{
+	basketBooks=JSON.parse(basketBooksFromStorage);
+}
+var openBasketButton=document.getElementById('open-basket-btn');
+var basketBookCount=document.getElementById('basket-book-count');
+var basketBooksTable=document.getElementById('basket-books-table');
+var totalPrice=document.getElementById('total-price');
+basketBookCount.innerHTML=basketBooks.length;
+xht.onreadystatechange = function(){
+if (this.readyState == 4 && this.status == 200){
+var responseJSON=this.responseText;
+var booksArray=JSON.parse(responseJSON);
+console.log(booksArray);
+
+
+booksArrayGlobal.push(...booksArray);
+
+var mainContent=document.getElementById('main-content');
+
+for(var i=0;i<booksArray.length;i++){
+var book=booksArray[i];
+mainContentHTML+="<div class='book-container'>";
+mainContentHTML+="<div class='book'>";
+mainContentHTML+="<span class='book-image' style='background-image:url(files/"+book.image+");' ></span>";
+mainContentHTML+="<span class='book-name' title='"+
+book.name+"'>"+book.name+"</span>";
+mainContentHTML+="<span class='book-price' title='"+
+book.price+"'>"+book.price+"</span>";
+mainContentHTML+="<span class='book-description' title='"+
+book.description+"'>"+book.description+"</span>";
+mainContentHTML+="<span class='book-author' title='"+
+book.author+"'>"+book.author+"</span>";
+mainContentHTML+="<span class='book-page-count' title='"+
+book.pageCount+"'>"+book.pageCount+"</span> ";
+mainContentHTML+="<div class='add-to-basket'><button "+
+"class='add-to-basket-btn btn btn-primary' onclick='addToBasket("+book.id+")'>Add basket</button></div>";
+mainContentHTML+="</div></div>";
+}
+
+mainContent.innerHTML=mainContentHTML;
+
+
+}
+};
+xht.open("POST", "rest/books/search-find-partial", true);
+xht.setRequestHeader("Content-type", "application/json");
+var searchObject={search:'',begin:begin,length:length};
+xht.send(JSON.stringify(searchObject));
+//REFRESH END
+// FUNCTIONS BEGIN
+function addToBasket(bookId){
+	//alert(bookId);
+	var bookExistsInBasket=false;
+	for(var i=0;i<basketBooks.length;i++){
+		var basketBook=basketBooks[i];
+		if(basketBook.book.id==bookId){basketBook.count++;bookExistsInBasket=true;break;}
+	}
+	if(bookExistsInBasket){
+		
+	}else{
+		for(var i=0;i<booksArrayGlobal.length;i++){
+			if(booksArrayGlobal[i].id==bookId){
+				var basketBook={count:1,book:booksArrayGlobal[i]};
+				basketBooks.push(basketBook);break;
+			}
+		}
+	}
+	
+	
+	//alert(JSON.stringify(basketBooks));
+	openBasketButton.style.display='none';
+	basketBookCount.innerHTML=basketBooks.length;
+	localStorage.setItem('basketBooks',JSON.stringify(basketBooks));
+	setTimeout(function(){openBasketButton.style.display='block';},300);
+}
+
+function openBasket(){
+	fillBasketTable();
+	if(basketBooks.length==0){
+		document.getElementById('confirm-order-btn').style.display='none';
+	}else{
+		document.getElementById('confirm-order-btn').style.display='block';
+	}
+}
+
+function deleteBasketBook(bookId){
+	for(var i=0;i<basketBooks.length;i++){
+		if(basketBooks[i].book.id==bookId){
+			basketBooks.splice(i,1);break;
+		}
+	}
+	localStorage.setItem('basketBooks',JSON.stringify(basketBooks));
+	
+	openBasketButton.style.display='none';
+	basketBookCount.innerHTML=basketBooks.length;
+	
+	if(basketBooks.length==0){
+		document.getElementById('confirm-order-btn').style.display='none';
+	}
+	
+	setTimeout(function(){openBasketButton.style.display='block';},300);
+	
+	fillBasketTable();
+}
+
+function fillBasketTable(){
+	var basketBooksTableHTML="";
+	for(var i=0;i<basketBooks.length;i++){
+		var basketBook=basketBooks[i];
+		basketBooksTableHTML+="<tr><td>"+basketBook.book.id;
+		basketBooksTableHTML+="</td><td>"+
+		"<img class='basket-book-image' src='files/"+basketBook.book.image+"' />";
+		basketBooksTableHTML+="</td><td>"+basketBook.book.name;
+		basketBooksTableHTML+="</td><td>"+basketBook.book.price;
+		basketBooksTableHTML+="</td><td><input min='1' max='10000' step='1'  "+
+		"onchange='bookCountChange("+basketBook.book.id+",this)' type='number' value='"+
+		basketBook.count;
+		basketBooksTableHTML+="' onkeypress='checkCount(event)' /></td><td id='book"+basketBook.book.id+"'>"+
+		(basketBook.book.price*basketBook.count);
+		basketBooksTableHTML+="</td><td><button onclick='deleteBasketBook("+basketBook.book.id+")'"+
+		" class='btn btn-danger'>X</button>";
+		basketBooksTableHTML+="</td></tr>";
+	}
+	basketBooksTable.innerHTML=basketBooksTableHTML;
+	calculateTotalPrice();
+}
+
+function bookCountChange(bookId,countInput){
+	
+	if (countInput.value == '' || countInput.value == '0') {
+		countInput.value = "1";
+		}
+	var count=Number(countInput.value);
+	for(var i=0;i<basketBooks.length;i++){
+		var basketBook=basketBooks[i];
+		if(basketBook.book.id==bookId){
+			basketBook.count=count;
+			document.getElementById('book'+basketBook.book.id).
+			innerHTML=(count*basketBook.book.price);
+			localStorage.setItem('basketBooks',JSON.stringify(basketBooks));
+			calculateTotalPrice();
+			break;
+		}
+	}
+	
+}
+
+function calculateTotalPrice(){
+	var totalPriceNumber=0;
+	for(var i=0;i<basketBooks.length;i++){
+		var basketBook=basketBooks[i];
+		totalPriceNumber+=basketBook.count*basketBook.book.price;
+	}
+	totalPrice.innerHTML='Total price: '+totalPriceNumber+' AZN';
+}
+
+function searchBook(searchText){
+	searchTextGlobal=searchText;
+	mainContentHTML="";
+	booksArrayGlobal=[];
+	xht.open("POST", "rest/books/search-find-partial", true);
+	xht.setRequestHeader("Content-type", "application/json");
+	begin=0;
+	var searchObject={search:searchText,begin:begin,length:length};
+	
+	xht.send(JSON.stringify(searchObject));
+}
+var counter=0;
+var allowScroll=true;
+function onScroll(){
+	if(allowScroll){
+		
+	const distanceToBottom = document.body.getBoundingClientRect().bottom;
+	const documentHeight=document.documentElement.clientHeight;
+	//console.log('distanceToBottom : '+distanceToBottom);
+	//console.log('documentHeight : '+documentHeight);
+	if (distanceToBottom < documentHeight + 150) {
+		allowScroll=false;
+		counter++;
+		console.log('onScroll : '+counter);
+		
+		begin+=20;
+		
+		xht.open("POST", "rest/books/search-find-partial", true);
+		xht.setRequestHeader("Content-type", "application/json");
+		var searchObject={search:searchTextGlobal,begin:begin,length:length};
+		xht.send(JSON.stringify(searchObject));
+		
+		setTimeout(function(){allowScroll=true;},1000);
+		
+	}
+	}
+	
+	
+	
+	}
+	window.addEventListener("scroll",onScroll);
+	
+	
+	function confirmOrder(){
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200){
+			console.log(this.responseText);
+window.location.href="confirm-order";
+		}
+		};
+		
+		
+		xhttp.open("POST", "rest/orders/save-basket-books", true);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		xhttp.send(JSON.stringify(basketBooks));
+		
+	}
+	
+	
+	function checkCount(event) {
+
+		var code = event.charCode;
+		if (code >= 48 && code <= 57) {
+
+		} else {
+
+			event.returnValue = false;
+		}
+
+		if (Number(event.target.value + "" + event.key) > 10000) {
+			event.target.value = "1";
+			event.returnValue = false;
+		}
+		if (event.target.value === "0" && event.key === "0") {
+		event.returnValue = false;
+		}
+
+	}
+	
+//FUNCTIONS END
+//JAVASCRIPT END
+</script>
+</body>
+</html>
