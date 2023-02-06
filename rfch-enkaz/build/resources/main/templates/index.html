@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+
+      <!-- post Modal -->
+  <div class="modal fade" id="post" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Post paylaş</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="input-group my-2">
+                <span class="input-group-text">Adres</span>
+                <textarea class="form-control" aria-label="With textarea"></textarea>
+              </div>
+
+              <div class="input-group my-2">
+                <span class="input-group-text">Kimlik</span>
+                <textarea class="form-control" aria-label="With textarea"></textarea>
+              </div>
+
+              <div class="input-group my-2">
+                <span class="input-group-text">Açıklama</span>
+                <textarea class="form-control" aria-label="With textarea"></textarea>
+              </div>
+            <p class="text-danger"><i class="bi bi-info-circle mx-2"></i>Lütfen sadece depremden zarar çekenler için paylaşım yapınız. Ve açıklama kısmına iletişim için bilgi giriniz</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+          <button type="button" class="btn btn-primary">Paylaş</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- register and login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Giriş yap</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+          <form action="/main" method="post">
+        <div class="modal-body">
+          <input type="text" name="username" placeholder="username" class="mb-2 form-control">
+          <input type="password" name="password" placeholder="password" class="form-control">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+          </form>
+      </div>
+    </div>
+  </div>
+      <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h1 class="modal-title fs-5">Hesap aç</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form action="register" method="post">
+                  <div class="modal-body">
+                      <input type="text" id="name" name="username" placeholder="isim" class="mb-2 form-control">
+                      <input type="password" id="password" name="password" placeholder="parola" class="form-control">
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" onclick="register()" class="btn btn-primary">Save changes</button>
+                  </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+      <script>
+          checkUserAuthentication();
+          function checkUserAuthentication(){
+              const getResponse = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      console.log(this.responseText);
+                      const response = JSON.parse(this.responseText);
+                      console.log(response.httpStatus);
+                      if(response.httpStatus=='UNAUTHORIZED'){
+                          console.log('ok');
+                          document.getElementById('post-button').style.display="none";
+                      }
+                  }
+              };
+              const xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = getResponse;
+              xhttp.open("POST", "/main/check", true);
+              xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+              xhttp.send();
+          }
+          function register() {
+              const name= document.getElementById("name").value;
+              const password= document.getElementById("password").value;
+              if(name==""||password==""){
+                  alert("Lutfen tum alanlari doldurun");
+                  return;
+              }
+              const getResponse = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      const response = JSON.parse(this.responseText);
+                      alert(response.message);
+                      location.reload();
+                  }
+              };
+              const xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = getResponse;
+              xhttp.open("POST", "/main/register", true);
+              xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+              xhttp.send(JSON.stringify({
+                  name: name,
+                  password: password
+              }));
+          }
+      </script>
+
+    <nav class="navbar fixed-top bg-body-tertiary">
+        <div class="container-fluid col-8">
+          <a class="navbar-brand" href="#">Enkaz </a>
+          <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+                hesap aç
+              </button>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                                       giriş yap
+              </button>
+
+
+              <button id="post-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#post">
+                post paylaş
+              </button>
+
+
+          </div>
+        </div>
+    </nav>
+
+    <div class="px-4 py-5 my-5 text-center">
+        <h1 class="display-5 fw-bold">Depremden zarar çekenler <br> ile alakalı acil paylaşım sitesi</h1>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4">Adress kısmına enkaz altındaki kişinin olduğu mekanı, kimlik kısmına o kişinin bilgilerini, açıklama kısmına ise belirtmek isdediğiniz şeyleri ve ulaşmak için adress yazınız lütfen</p>
+        </div>
+      </div>
+
+    <div class="container"> 
+        <div class="row flex-wrap my-5 gap-2">
+            <div class="card m-1" style="width: 18rem;">
+                <div class="card-body">
+                  <h6 class="card-title"><b>Adres:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, fugiat!</h6>
+                  <hr>
+                  <h6 class="card-title"><b>Kimlik:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, fugiat!</h6>
+                  <hr>
+                  <p class="card-text"><b>Açıklama:</b> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+              </div>
+              <div class="card m-1" style="width: 18rem;">
+                <div class="card-body">
+                  <h6 class="card-title"><b>Adres:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, fugiat!</h6>
+                  <hr>
+                  <h6 class="card-title"><b>Kimlik:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, fugiat!</h6>
+                  <hr>
+                  <p class="card-text"><b>Açıklama:</b> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-danger btn"><i class="bi bi-trash mx-1"></i>sil</button>
+                </div>
+              </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+</body>
+</html>
