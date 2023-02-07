@@ -21,23 +21,23 @@
         <div class="modal-body">
             <div class="input-group my-2">
                 <span class="input-group-text">Adres</span>
-                <textarea class="form-control" aria-label="With textarea"></textarea>
+                <textarea maxlength="500" id="address" class="form-control" aria-label="With textarea"></textarea>
               </div>
 
               <div class="input-group my-2">
                 <span class="input-group-text">Kimlik</span>
-                <textarea class="form-control" aria-label="With textarea"></textarea>
+                <textarea maxlength="500" id="personality" class="form-control" aria-label="With textarea"></textarea>
               </div>
 
               <div class="input-group my-2">
                 <span class="input-group-text">Açıklama</span>
-                <textarea class="form-control" aria-label="With textarea"></textarea>
+                <textarea maxlength="500" id="summary" class="form-control" aria-label="With textarea"></textarea>
               </div>
             <p class="text-danger"><i class="bi bi-info-circle mx-2"></i>Lütfen sadece depremden zarar çekenler için paylaşım yapınız. Ve açıklama kısmına iletişim için bilgi giriniz</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-          <button type="button" class="btn btn-primary">Paylaş</button>
+          <button type="button" onclick="addPost()" class="btn btn-primary">Paylaş</button>
         </div>
       </div>
     </div>
@@ -57,8 +57,8 @@
           <input type="password" name="password" placeholder="password" class="form-control">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+          <button type="submit" class="btn btn-primary">Giriş yap</button>
         </div>
           </form>
       </div>
@@ -77,8 +77,8 @@
                       <input type="password" id="password" name="password" placeholder="parola" class="form-control">
                   </div>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" onclick="register()" class="btn btn-primary">Save changes</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                      <button type="button" onclick="register()" class="btn btn-primary">Hesap aç</button>
                   </div>
                   </form>
               </div>
@@ -86,14 +86,122 @@
       </div>
       <script>
           checkUserAuthentication();
-          function checkUserAuthentication(){
+          getAuthenticatedUser();
+          loadSharings();
+          let authenticatedUserId;
+
+          function getAuthenticatedUser(){
+              const getResponse = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      const response = JSON.parse(this.responseText);
+                      authenticatedUserId = response.message;
+                  }
+              };
+              const xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = getResponse;
+              xhttp.open("GET", "/main/get-user", true);
+              xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+              xhttp.send();
+          }
+
+          function addPost() {
+              const address= document.getElementById("address").value;
+              const personality= document.getElementById("personality").value;
+              const summary= document.getElementById("summary").value;
+              if(address==""||personality==""||summary==""){
+                  alert("Lutfen tum alanlari doldurun");
+                  return;
+              }
+              const getResponse = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      const response = JSON.parse(this.responseText);
+                      alert(response.message);
+                      location.reload();
+                  }
+              };
+              const xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = getResponse;
+              xhttp.open("POST", "/main/addPost", true);
+              xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+              xhttp.send(JSON.stringify({
+                  userId:authenticatedUserId,
+                  address: address,
+                  personality: personality,
+                  summary:summary
+              }));
+          }
+
+          function deleteSharing(id) {
+              const getResponse = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      const response = JSON.parse(this.responseText);
+                      alert(response.message);
+                      location.reload();
+                  }
+              };
+              const xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = getResponse;
+              xhttp.open("POST", "/main/delete", true);
+              xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+              xhttp.send(id);
+          }
+          function loadSharings(){
               const getResponse = function() {
                   if (this.readyState == 4 && this.status == 200) {
                       console.log(this.responseText);
                       const response = JSON.parse(this.responseText);
-                      console.log(response.httpStatus);
+                      let sharingsElement = document.getElementById("sharings");
+                      for (let i = 0; i < response.length; i++) {
+                          let sharingId = response[i].id;
+                          let userId = response[i].userId;
+                          let address = response[i].address;
+                          let personality = response[i].personality;
+                          let summary = response[i].summary;
+
+                          console.log(authenticatedUserId);
+                          console.log(userId);
+                          if (userId == authenticatedUserId) {
+                              sharingsElement.innerHTML += `<div class="card m-1" style="width: 18rem;">
+<input hidden value=${userId} id="user-id"/>
+<input hidden id="sharing-id"/>
+                <div class="card-body">
+                  <h6 class="card-title"><b>Adres:</b> ${address}</h6>
+                  <hr>
+                  <h6 class="card-title"><b>Kimlik:</b>${personality}</h6>
+                  <hr>
+                  <p class="card-text"><b>Açıklama:</b>${summary}</p>
+                </div>
+                <div class="card-footer">
+                    <button onclick="deleteSharing(${sharingId})" id="delete-button" class="btn-danger btn"><i class="bi bi-trash mx-1"></i>Sil</button>
+                </div>
+              </div>`;
+                          }else {
+                              sharingsElement.innerHTML += `<div class="card m-1" style="width: 18rem;">
+<input hidden value=${userId} id="user-id"/>
+                <div class="card-body">
+                  <h6 class="card-title"><b>Adres:</b> ${address}</h6>
+                  <hr>
+                  <h6 class="card-title"><b>Kimlik:</b>${personality}</h6>
+                  <hr>
+                  <p class="card-text"><b>Açıklama:</b>${summary}</p>
+                </div>
+              </div>`;
+                          }
+                      }
+                  }
+              };
+              const xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = getResponse;
+              xhttp.open("GET", "/main/get-sharing", true);
+              xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+              xhttp.send();
+          }
+
+          function checkUserAuthentication(){
+              const getResponse = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      const response = JSON.parse(this.responseText);
                       if(response.httpStatus=='UNAUTHORIZED'){
-                          console.log('ok');
                           document.getElementById('post-button').style.display="none";
                       }
                   }
@@ -134,15 +242,15 @@
           <a class="navbar-brand" href="#">Enkaz </a>
           <div>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
-                hesap aç
+                Hesap aç
               </button>
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
-                                                       giriş yap
+                                                       Giriş yap
               </button>
 
 
               <button id="post-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#post">
-                post paylaş
+                Post paylaş
               </button>
 
 
@@ -158,28 +266,8 @@
       </div>
 
     <div class="container"> 
-        <div class="row flex-wrap my-5 gap-2">
-            <div class="card m-1" style="width: 18rem;">
-                <div class="card-body">
-                  <h6 class="card-title"><b>Adres:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, fugiat!</h6>
-                  <hr>
-                  <h6 class="card-title"><b>Kimlik:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, fugiat!</h6>
-                  <hr>
-                  <p class="card-text"><b>Açıklama:</b> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-              </div>
-              <div class="card m-1" style="width: 18rem;">
-                <div class="card-body">
-                  <h6 class="card-title"><b>Adres:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, fugiat!</h6>
-                  <hr>
-                  <h6 class="card-title"><b>Kimlik:</b> Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, fugiat!</h6>
-                  <hr>
-                  <p class="card-text"><b>Açıklama:</b> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-                <div class="card-footer">
-                    <button class="btn-danger btn"><i class="bi bi-trash mx-1"></i>sil</button>
-                </div>
-              </div>
+        <div class="row flex-wrap my-5 gap-2" id="sharings">
+
         </div>
     </div>
 
