@@ -132,7 +132,7 @@ public class MainController {
             userRegisterService.registerNewUserAccount(userDto);
             userDetailsService.loadUserByUsername(userDto.getName());
             return ResponseEntity.ok(ResponseDto.builder()
-                    .message("Kayit basarili.Lutfen giris yapin !")
+                    .message("Kayit basarili.Lutfen giris yapin ")
                     .httpStatus(HttpStatus.ACCEPTED)
                     .build());
         }

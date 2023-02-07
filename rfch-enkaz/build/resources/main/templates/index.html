@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js
+"></script>
+    <link href="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
+" rel="stylesheet">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -109,14 +115,21 @@
               const personality= document.getElementById("personality").value;
               const summary= document.getElementById("summary").value;
               if(address==""||personality==""||summary==""){
-                  alert("Lutfen tum alanlari doldurun");
+                  Swal.fire(
+                      "Lutfen tum alanlari doldurun",
+                      "",
+                      "warning"
+                  );
                   return;
               }
               const getResponse = function() {
                   if (this.readyState == 4 && this.status == 200) {
                       const response = JSON.parse(this.responseText);
-                      alert(response.message);
-                      location.reload();
+                      Swal.fire(
+                          response.message,
+                      ).then((result) => {
+                          location.reload();
+                      });
                   }
               };
               const xhttp = new XMLHttpRequest();
@@ -135,8 +148,11 @@
               const getResponse = function() {
                   if (this.readyState == 4 && this.status == 200) {
                       const response = JSON.parse(this.responseText);
-                      alert(response.message);
-                      location.reload();
+                      Swal.fire(
+                          response.message,
+                      ).then((result) => {
+                          location.reload();
+                      });
                   }
               };
               const xhttp = new XMLHttpRequest();
@@ -148,7 +164,6 @@
           function loadSharings(){
               const getResponse = function() {
                   if (this.readyState == 4 && this.status == 200) {
-                      console.log(this.responseText);
                       const response = JSON.parse(this.responseText);
                       let sharingsElement = document.getElementById("sharings");
                       for (let i = 0; i < response.length; i++) {
@@ -157,9 +172,6 @@
                           let address = response[i].address;
                           let personality = response[i].personality;
                           let summary = response[i].summary;
-
-                          console.log(authenticatedUserId);
-                          console.log(userId);
                           if (userId == authenticatedUserId) {
                               sharingsElement.innerHTML += `<div class="card m-1" style="width: 18rem;">
 <input hidden value=${userId} id="user-id"/>
@@ -216,14 +228,21 @@
               const name= document.getElementById("name").value;
               const password= document.getElementById("password").value;
               if(name==""||password==""){
-                  alert("Lutfen tum alanlari doldurun");
+                  Swal.fire(
+                      "Lutfen tum alanlari doldurun",
+                      "",
+                      "warning"
+                  );
                   return;
               }
               const getResponse = function() {
                   if (this.readyState == 4 && this.status == 200) {
                       const response = JSON.parse(this.responseText);
-                      alert(response.message);
-                      location.reload();
+                      Swal.fire(
+                          response.message,
+                      ).then((result) => {
+                          location.reload();
+                      });
                   }
               };
               const xhttp = new XMLHttpRequest();
