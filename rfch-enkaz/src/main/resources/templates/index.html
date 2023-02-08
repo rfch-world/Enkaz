@@ -25,7 +25,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Post paylaş</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Duyuru Paylaş</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -43,7 +43,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
                 <span class="input-group-text">Açıklama</span>
                 <textarea maxlength="500" id="summary" class="form-control" aria-label="With textarea"></textarea>
               </div>
-            <p class="text-danger"><i class="bi bi-info-circle mx-2"></i>Lütfen sadece depremden zarar çekenler için paylaşım yapınız. Ve açıklama kısmına iletişim için bilgi giriniz</p>
+            <p class="text-danger"><i class="bi bi-info-circle mx-2"></i>Lütfen sadece depremden etkilenen kişiler için paylaşım yapınız. Ve açıklama kısmına iletişim bilgisi giriniz.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
@@ -58,7 +58,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5">Giriş yap</h1>
+          <h1 class="modal-title fs-5">Giriş Yap</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
           <form action="/main" method="post">
@@ -68,7 +68,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-          <button type="submit" class="btn btn-primary">Giriş yap</button>
+          <button type="submit" class="btn btn-primary">Giriş Yap</button>
         </div>
           </form>
       </div>
@@ -78,7 +78,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
           <div class="modal-dialog">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h1 class="modal-title fs-5">Hesap aç</h1>
+                      <h1 class="modal-title fs-5">Hesap Oluştur</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <form action="register" method="post">
@@ -88,7 +88,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
                   </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                      <button type="button" onclick="register()" class="btn btn-primary">Hesap aç</button>
+                      <button type="button" onclick="register()" class="btn btn-primary">Hesap Oluştur</button>
                   </div>
                   </form>
               </div>
@@ -265,7 +265,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
           <a class="navbar-brand" href="#">Enkaz </a>
           <div class="d-flex align-items-center gap-2 justify-content-center">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
-                Hesap aç
+                Hesap Oluştur
               </button>
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
                                                        Giriş yap
@@ -273,7 +273,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
 
 
               <button id="post-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#post">
-                Post paylaş
+                Duyuru Paylaş
               </button>
 
 
@@ -282,7 +282,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css
     </nav>
 
     <div class="px-4 py-5 my-5 text-center hero">
-        <h1 class="display-5 fw-bold">Depremden zarar görenler <br> ile ilgili acil duyuru sitesi</h1>
+        <h1 class="display-5 fw-bold">Depremden etkilenenler <br> için acil duyuru platformu</h1>
         <div class="col-lg-6 mx-auto">
           <p class="lead mb-4">Enkaz altındaki kişinin bilgilerini ilgili bölümlere yazarak yardım duyurusunda bulunabilirsiniz. </p>
         </div>
