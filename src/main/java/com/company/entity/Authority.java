@@ -1,4 +1,4 @@
-package world.rfch.jpa.entity;
+package com.company.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +26,7 @@ import java.util.Objects;
 @Entity
 @Builder
 @AllArgsConstructor
-@Table(name = Authority.TABLE_NAME)
+@Table(name = "authority")
 public class Authority implements GrantedAuthority {
 
     public static final String TABLE_NAME = "authorities";

@@ -1,5 +1,6 @@
 package com.company.service;
 
+import com.company.dto.RegistrationDto;
 import com.company.entity.UserEntity;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface UserService {
     UserEntity findById(Long userId);
 
     void deleteById(Long id);
+
+    void register(RegistrationDto dto);
 }

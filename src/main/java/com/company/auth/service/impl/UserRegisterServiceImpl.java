@@ -25,7 +25,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         String name=userDto.getName();
         String password=passwordEncoder.encode(userDto.getPassword());
             UserEntity userEntity = new UserEntity();
-            userEntity.setName(name);
+            userEntity.setUsername(name);
             userEntity.setPassword(password);
             return userService.save(userEntity);
     }

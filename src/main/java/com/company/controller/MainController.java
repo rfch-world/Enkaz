@@ -137,7 +137,7 @@ public class MainController {
     @PostMapping("register")
     public ResponseEntity<ResponseDto> registerUser(@Valid @RequestBody UserDto userDto){
         try{
-            if (userRepository.findByName(userDto.getName()).isPresent()){
+            if (userRepository.findByUsername(userDto.getName()).isPresent()){
                 throw new Exception("Bu isimli kullanici zaten mevcut");
             }
             userRegisterService.registerNewUserAccount(userDto);

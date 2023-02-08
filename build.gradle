@@ -12,8 +12,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.algolia:algoliasearch-core:3.16.5'
-    implementation 'com.algolia:algoliasearch-apache:3.16.5'
+    compile 'io.springfox:springfox-swagger2:2.9.2'
+    compile 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.1.1'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.7.4'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.15.Final'
     implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.7.2'
