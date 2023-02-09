@@ -1,5 +1,6 @@
 package com.company.controller;
 
+import com.company.dto.NumberOfAddressDto;
 import com.company.dto.ResponseDto;
 import com.company.dto.SharingDto;
 import com.company.dto.SharingResponseDto;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
