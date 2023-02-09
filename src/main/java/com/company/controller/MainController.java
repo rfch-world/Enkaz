@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,16 +114,10 @@ public class MainController {
     }
 
     @PostMapping("check-authentication")
-    public ResponseEntity<ResponseDto> check(Principal principal){
+    public ResponseEntity<Void> check(Principal principal){
         if (principal==null){
-            return ResponseEntity.ok(ResponseDto.builder()
-                    .message("")
-                    .httpStatus(HttpStatus.UNAUTHORIZED)
-                    .build());
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
-        return ResponseEntity.ok(ResponseDto.builder()
-                .message("")
-                .httpStatus(HttpStatus.ACCEPTED)
-                .build());
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

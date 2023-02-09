@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 public class RegistrationDto {
 
     @NotBlank
+    @NotNull
     private String username;
 
     @NotBlank
