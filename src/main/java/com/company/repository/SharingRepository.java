@@ -15,6 +15,6 @@ public interface SharingRepository extends JpaRepository<SharingEntity,Long> {
 
     @Query(value = "SELECT new com.company.dto.NumberOfAddressDto(se.district, COUNT(se.id)) " +
             "FROM SharingEntity se " +
-            "GROUP BY se.district")
+            "GROUP BY se.district ORDER BY COUNT(se.id) desc")
     List<NumberOfAddressDto> countDistrict();
 }

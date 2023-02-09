@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -33,5 +35,13 @@ public class UserController {
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build());
         }
+    }
+
+    @GetMapping("/ip")
+    public ResponseEntity<ResponseDto> getIp(HttpServletRequest httpServletRequest){
+        return ResponseEntity.ok(ResponseDto.builder()
+                .data(httpServletRequest.getRemoteAddr())
+                .httpStatus(HttpStatus.ACCEPTED)
+                .build());
     }
 }

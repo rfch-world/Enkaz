@@ -27,8 +27,8 @@ public class SharingController {
         return new ResponseEntity<>(this.sharingService.topWreckList(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto> deletePost(@RequestBody Long id){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ResponseDto> deletePost(@PathVariable Long id){
         try{
             sharingService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
