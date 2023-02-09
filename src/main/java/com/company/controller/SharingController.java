@@ -20,8 +20,8 @@ public class SharingController {
         this.sharingService = sharingService;
     }
 
-    @GetMapping("/abc")
-    public ResponseEntity<List<NumberOfAddressDto>> abc() {
+    @GetMapping("/topWreckList")
+    public ResponseEntity<List<NumberOfAddressDto>> topWreckList() {
         return new ResponseEntity<>(this.sharingService.topWreckList(), HttpStatus.OK);
     }
 }
