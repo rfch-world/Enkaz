@@ -21,7 +21,6 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -37,6 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserEntity save(UserEntity user) {
         return userRepository.save(user);
     }
@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
@@ -83,6 +84,7 @@ public class UserServiceImpl implements UserService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
+        user.setIpAddress(dto.getIpAddress());
         return user;
     }
 }

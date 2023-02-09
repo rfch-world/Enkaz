@@ -29,6 +29,9 @@ public class UserEntity implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "ip_address")
+    private String ipAddress;
+
     @OneToMany(mappedBy = "user")
     List<SharingEntity> sharingEntities;
 

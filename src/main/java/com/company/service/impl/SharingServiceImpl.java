@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class SharingServiceImpl implements SharingService {
 
     private final SharingRepository sharingRepository;
 
     @Override
+    @Transactional
     public SharingEntity save(SharingEntity sharingEntity) {
         return sharingRepository.save(sharingEntity);
     }
@@ -36,6 +36,7 @@ public class SharingServiceImpl implements SharingService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         sharingRepository.deleteById(id);
     }
@@ -47,6 +48,6 @@ public class SharingServiceImpl implements SharingService {
 
     @Override
     public List<NumberOfAddressDto> topWreckList() {
-        return this.sharingRepository.countCityAndDistrict();
+        return this.sharingRepository.countDistrict();
     }
 }

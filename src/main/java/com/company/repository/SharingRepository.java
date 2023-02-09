@@ -13,8 +13,8 @@ import java.util.List;
 public interface SharingRepository extends JpaRepository<SharingEntity,Long> {
     List<SharingEntity> getAllByUser(UserEntity userEntity);
 
-    @Query(value = "SELECT new com.company.dto.NumberOfAddressDto(se.city, se.district, COUNT(*)) " +
+    @Query(value = "SELECT new com.company.dto.NumberOfAddressDto(se.district, COUNT(se.id)) " +
             "FROM SharingEntity se " +
-            "GROUP BY se.city, se.district")
-    List<NumberOfAddressDto> countCityAndDistrict();
+            "GROUP BY se.district")
+    List<NumberOfAddressDto> countDistrict();
 }

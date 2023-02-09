@@ -25,4 +25,8 @@ public class RegistrationDto {
     @NotNull
     private String password;
 
+    @NotBlank
+    @NotNull
+    private String ipAddress;
+
 }

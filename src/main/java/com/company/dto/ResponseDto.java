@@ -10,6 +10,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @Setter
 public class ResponseDto {
-    private String message;
+    private String data;
     private HttpStatus httpStatus;
 }
