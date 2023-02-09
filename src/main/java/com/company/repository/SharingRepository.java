@@ -1,8 +1,10 @@
 package com.company.repository;
 
+import com.company.dto.NumberOfAddressDto;
 import com.company.entity.SharingEntity;
 import com.company.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,4 +12,9 @@ import java.util.List;
 @Repository
 public interface SharingRepository extends JpaRepository<SharingEntity,Long> {
     List<SharingEntity> getAllByUser(UserEntity userEntity);
+
+    @Query(value = "SELECT new com.company.dto.NumberOfAddressDto(se.city, se.district, COUNT(*)) " +
+            "FROM SharingEntity se " +
+            "GROUP BY se.city, se.district")
+    List<NumberOfAddressDto> countCityAndDistrict();
 }

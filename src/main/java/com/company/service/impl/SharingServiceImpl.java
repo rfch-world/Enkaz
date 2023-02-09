@@ -1,5 +1,6 @@
 package com.company.service.impl;
 
+import com.company.dto.NumberOfAddressDto;
 import com.company.entity.SharingEntity;
 import com.company.entity.UserEntity;
 import com.company.exception.NotFoundException;
@@ -42,5 +43,10 @@ public class SharingServiceImpl implements SharingService {
     @Override
     public List<SharingEntity> findByUser(UserEntity userEntity) {
         return sharingRepository.getAllByUser(userEntity);
+    }
+
+    @Override
+    public List<NumberOfAddressDto> topWreckList() {
+        return this.sharingRepository.countCityAndDistrict();
     }
 }
