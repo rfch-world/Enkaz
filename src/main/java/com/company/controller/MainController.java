@@ -1,8 +1,5 @@
 package com.company.controller;
 
-import com.company.auth.service.UserDetailsService;
-import com.company.dto.UserDto;
-import com.company.auth.service.UserRegisterService;
 import com.company.dto.ResponseDto;
 import com.company.dto.SharingDto;
 import com.company.dto.SharingResponseDto;
@@ -29,13 +26,9 @@ public class MainController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserRegisterService userRegisterService;
-    @Autowired
     private UserService userService;
     @Autowired
     private SharingService sharingService;
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     @GetMapping
     public String showMainPage(){
@@ -54,7 +47,7 @@ public class MainController {
             sharingDto.setDistrict(sharingEntity.getDistrict());
             sharingDto.setInformationSource(sharingEntity.getInformationSource());
             sharingDto.setNameSurname(sharingEntity.getNameSurname());
-            sharingDto.setNeighborhood(sharingEntity.getNeighborhood());
+            sharingDto.setNeighbourhood(sharingEntity.getNeighbourhood());
             sharingDto.setStreet(sharingEntity.getStreet());
             sharingDto.setUserId(sharingEntity.getUser().getId().toString());
             sharingDtos.add(sharingDto);
@@ -97,12 +90,12 @@ public class MainController {
     @PostMapping("addPost")
     public ResponseEntity<ResponseDto> addPost(@RequestBody SharingDto sharingDto){
         try{
-            UserEntity userEntity = userService.findById(new Long(sharingDto.getUserId()));
+            UserEntity userEntity = userService.findById(Long.valueOf(sharingDto.getUserId()));
             SharingEntity sharingEntity = new SharingEntity();
             sharingEntity.setAddress(sharingDto.getAddress());
             sharingEntity.setCity(sharingDto.getCity());
             sharingEntity.setDistrict(sharingDto.getDistrict());
-            sharingEntity.setNeighborhood(sharingDto.getNeighborhood());
+            sharingEntity.setNeighbourhood(sharingDto.getNeighbourhood());
             sharingEntity.setStreet(sharingDto.getStreet());
             sharingEntity.setInformationSource(sharingDto.getInformationSource());
             sharingEntity.setNameSurname(sharingDto.getNameSurname());
@@ -133,25 +126,5 @@ public class MainController {
                 .message("")
                 .httpStatus(HttpStatus.ACCEPTED)
                 .build());
-    }
-    @PostMapping("register")
-    public ResponseEntity<ResponseDto> registerUser(@Valid @RequestBody UserDto userDto){
-        try{
-            if (userRepository.findByUsername(userDto.getName()).isPresent()){
-                throw new Exception("Bu isimli kullanici zaten mevcut");
-            }
-            userRegisterService.registerNewUserAccount(userDto);
-            userDetailsService.loadUserByUsername(userDto.getName());
-            return ResponseEntity.ok(ResponseDto.builder()
-                    .message("Kayit basarili.Lutfen giris yapin ")
-                    .httpStatus(HttpStatus.ACCEPTED)
-                    .build());
-        }
-        catch (Exception e){
-            return ResponseEntity.ok(ResponseDto.builder()
-                    .message(e.getMessage())
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .build());
-        }
     }
 }

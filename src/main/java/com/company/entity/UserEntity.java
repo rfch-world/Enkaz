@@ -1,6 +1,5 @@
 package com.company.entity;
 
-import com.company.enums.AuthProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
@@ -8,9 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
-
-import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -34,8 +32,8 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user")
     List<SharingEntity> sharingEntities;
 
-    @Enumerated(STRING)
-    private AuthProvider authProvider;
+    @Column(name = "registration_date")
+    LocalDateTime registrationDate;
 
     private boolean accountNonExpired;
 
@@ -48,11 +46,16 @@ public class UserEntity implements UserDetails {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-            name = "user_authorities",
+            name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
     @Builder.Default
     @ToString.Exclude
     private Set<Authority> authorities = new HashSet<>();
+
+    @PrePersist
+    public void registrationDate(){
+        registrationDate=LocalDateTime.now();
+    }
 }
