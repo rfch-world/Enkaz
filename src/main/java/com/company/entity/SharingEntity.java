@@ -32,8 +32,8 @@ public class SharingEntity {
     @Column(name = "district")
     private String district;
 
-    @Column(name = "neighborhood")
-    private String neighborhood;
+    @Column(name = "neighbourhood")
+    private String neighbourhood;
 
     @Column(name = "street")
     private String street;

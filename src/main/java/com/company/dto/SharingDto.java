@@ -20,7 +20,7 @@ public class SharingDto {
 
     private String district;
 
-    private String neighborhood;
+    private String neighbourhood;
 
     private String street;
 

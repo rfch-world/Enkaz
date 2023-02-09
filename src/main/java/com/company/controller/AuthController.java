@@ -4,6 +4,7 @@ import com.company.auth.TokenProvider;
 import com.company.dto.AccessTokenDto;
 import com.company.dto.LoginDto;
 import com.company.dto.RegistrationDto;
+import com.company.exception.EmailAlreadyUsedException;
 import com.company.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,10 +52,23 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegistrationDto dto) {
+    public ResponseEntity<AccessTokenDto> register(@RequestBody RegistrationDto dto) {
         log.trace("Sign up request with email {}", dto.getUsername());
-        userService.register(dto);
-        return ResponseEntity.ok().build();
+        try {
+            userService.register(dto);
+        }
+        catch (EmailAlreadyUsedException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        dto.getUsername(),
+                        dto.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final String token = jwtService.generateToken(authentication);
+        return new ResponseEntity<>(new AccessTokenDto(token), HttpStatus.OK);
     }
 
 }
