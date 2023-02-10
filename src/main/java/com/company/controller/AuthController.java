@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -67,4 +68,17 @@ public class AuthController {
         return new ResponseEntity<>(new AccessTokenDto(token), HttpStatus.OK);
     }
 
+    @PostMapping("/authentication")
+    public ResponseEntity<Void> validateToken(@RequestBody String token, @RequestBody String username){
+        UserDetails userDetails = userService.findByName(username);
+        try{
+            if(jwtService.validateToken(token,userDetails)){
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            throw new Exception();
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 }
