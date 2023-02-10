@@ -43,7 +43,8 @@ public class SharingController {
     @PostMapping("/add")
     public ResponseEntity<Void> addPost(@RequestBody SharingDto sharingDto, @RequestHeader (name="Authorization") String token){
         try{
-            String username = tokenProvider.getUsernameFromToken(token);
+            String jwtToken = token.substring(7);
+            String username = tokenProvider.getUsernameFromToken(jwtToken);
             UserEntity userEntity = userService.findByName(username);
             SharingEntity sharingEntity = new SharingEntity();
             sharingEntity.setAddress(sharingDto.getAddress());

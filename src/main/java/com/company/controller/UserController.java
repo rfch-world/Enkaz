@@ -24,7 +24,8 @@ public class UserController {
     @GetMapping("/get")
     public ResponseEntity<UserDto> getUser(@RequestHeader (name="Authorization") String token){
         try{
-            String username = tokenProvider.getUsernameFromToken(token);
+            String jwtToken = token.substring(7);
+            String username = tokenProvider.getUsernameFromToken(jwtToken);
             UserEntity userEntity = userService.findByName(username);
             Long id = userEntity.getId();
             return ResponseEntity.status(HttpStatus.OK).body(UserDto.builder().id(id).name(username).build());
