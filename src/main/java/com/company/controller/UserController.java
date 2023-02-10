@@ -2,6 +2,7 @@ package com.company.controller;
 
 import com.company.auth.TokenProvider;
 import com.company.dto.ResponseDto;
+import com.company.dto.UserDto;
 import com.company.entity.UserEntity;
 import com.company.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +22,14 @@ public class UserController {
     private TokenProvider tokenProvider;
 
     @GetMapping("/get")
-    public ResponseEntity<ResponseDto> getUser(String token){
+    public ResponseEntity<UserDto> getUser(@RequestHeader (name="Authorization") String token){
         try{
             String username = tokenProvider.getUsernameFromToken(token);
             UserEntity userEntity = userService.findByName(username);
-            return ResponseEntity.ok(ResponseDto.builder()
-                    .data(userEntity.getId().toString())
-                    .httpStatus(HttpStatus.ACCEPTED)
-                    .build());
+            Long id = userEntity.getId();
+            return ResponseEntity.status(HttpStatus.OK).body(UserDto.builder().id(id).name(username).build());
         }catch (Exception e){
-            return ResponseEntity.ok(ResponseDto.builder()
-                    .data(e.getMessage())
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .build());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 

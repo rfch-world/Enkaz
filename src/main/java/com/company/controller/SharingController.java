@@ -1,5 +1,6 @@
 package com.company.controller;
 
+import com.company.auth.TokenProvider;
 import com.company.dto.*;
 import com.company.entity.SharingEntity;
 import com.company.entity.UserEntity;
@@ -21,6 +22,7 @@ public class SharingController {
 
     private final UserService userService;
     private final SharingService sharingService;
+    private final TokenProvider tokenProvider;
 
     @GetMapping("/topWreckList")
     public ResponseEntity<List<NumberOfAddressDto>> topWreckList() {
@@ -39,12 +41,14 @@ public class SharingController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> addPost(@RequestBody SharingDto sharingDto){
+    public ResponseEntity<Void> addPost(@RequestBody SharingDto sharingDto, @RequestHeader (name="Authorization") String token){
         try{
-            UserEntity userEntity = userService.findById(Long.valueOf(sharingDto.getUserId()));
+            String username = tokenProvider.getUsernameFromToken(token);
+            UserEntity userEntity = userService.findByName(username);
             SharingEntity sharingEntity = new SharingEntity();
             sharingEntity.setAddress(sharingDto.getAddress());
             sharingEntity.setCity(sharingDto.getCity());
+            sharingEntity.setPhoneNumber(sharingDto.getPhoneNumber());
             sharingEntity.setDistrict(sharingDto.getDistrict());
             sharingEntity.setNeighbourhood(sharingDto.getNeighbourhood());
             sharingEntity.setStreet(sharingDto.getStreet());
@@ -68,6 +72,7 @@ public class SharingController {
             sharingDto.setId(sharingEntity.getId());
             sharingDto.setAddress(sharingEntity.getAddress());
             sharingDto.setCity(sharingEntity.getCity());
+            sharingDto.setPhoneNumber(sharingEntity.getPhoneNumber());
             sharingDto.setDistrict(sharingEntity.getDistrict());
             sharingDto.setInformationSource(sharingEntity.getInformationSource());
             sharingDto.setNameSurname(sharingEntity.getNameSurname());

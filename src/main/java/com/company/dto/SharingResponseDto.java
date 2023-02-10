@@ -21,6 +21,8 @@ public class SharingResponseDto {
 
     private String district;
 
+    private String phoneNumber;
+
     private String neighbourhood;
 
     private String street;

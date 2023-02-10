@@ -32,6 +32,9 @@ public class SharingEntity {
     @Column(name = "district")
     private String district;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Column(name = "neighbourhood")
     private String neighbourhood;
 
