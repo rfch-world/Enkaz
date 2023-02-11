@@ -4,6 +4,7 @@ import com.company.auth.TokenProvider;
 import com.company.dto.AccessTokenDto;
 import com.company.dto.LoginDto;
 import com.company.dto.RegistrationDto;
+import com.company.dto.ValidationDto;
 import com.company.exception.EmailAlreadyUsedException;
 import com.company.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -69,16 +70,7 @@ public class AuthController {
     }
 
     @PostMapping("/authentication")
-    public ResponseEntity<Void> validateToken(@RequestBody String token, @RequestBody String username){
-        UserDetails userDetails = userService.findByName(username);
-        try{
-            if(jwtService.validateToken(token,userDetails)){
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            throw new Exception();
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<String> validateToken(){
+        return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }
